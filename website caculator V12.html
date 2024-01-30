@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cabinet Door Order Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .calculator, .instructions {
+            width: 48%;
+            background-color: #444;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .instructions {
+            padding-left: 20px;
+            border-left: 2px solid #555;
+        }
+        input, select, button {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        input, select {
+            width: 95%;
+        }
+        button {
+            background-color: #556B2F;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6B8E23;
+        }
+        a {
+            color: #ADD8E6;
+        }
+        a:hover {
+            color: #00BFFF;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #aaa;
+        }
+    </style>
+    <script>
+        let doors = [];
+
+        function addDoor() {
+            var companyName = document.getElementById("companyName").value;
+            var jobNumber = document.getElementById("jobNumber").value;
+            var length = document.getElementById("length").value;
+            var width = document.getElementById("width").value;
+            var type = document.getElementById("type").value;
+            var costPerSquareFoot;
+
+            switch(type) {
+                case "MDF": costPerSquareFoot = 12; break;
+                case "5PieceDoors": costPerSquareFoot = 13.99; break;
+                case "MDFPrimed": costPerSquareFoot = 22; break;
+                case "5PieceDoorsPrimed": costPerSquareFoot = 25; break;
+                default: costPerSquareFoot = 0;
+            }
+
+            var squareFeet = (length * width) / 144;
+            var cost = squareFeet * costPerSquareFoot;
+
+            if (length > 0 && width > 0 && costPerSquareFoot > 0) {
+                doors.push({ companyName, jobNumber, length, width, type, cost });
+            }
+
+            document.getElementById("length").value = '';
+            document.getElementById("width").value = '';
+            displayDoors();
+        }
+
+        function displayDoors() {
+            var result = "Doors:\n";
+            var jobTotals = {};
+
+            doors.forEach((door, index) => {
+                result += "Door " + (index + 1) + " (Company: " + door.companyName + ", Job Number: " + door.jobNumber + "): " + door.length + " x " + door.width + " inches, Type: " + door.type + ", Cost: $" + door.cost.toFixed(2) + "\n";
+                jobTotals[door.jobNumber] = (jobTotals[door.jobNumber] || 0) + door.cost;
+            });
+
+            for (var job in jobTotals) {
+                result += "Subtotal for Job " + job + ": $" + jobTotals[job].toFixed(2) + "\n";
+            }
+
+            result += "\nDisclaimer: This is an estimated quote.";
+            document.getElementById("result").innerText = result;
+        }
+
+        function copyToClipboard() {
+            var result = document.getElementById("result").innerText;
+            navigator.clipboard.writeText(result);
+            alert("Copied to clipboard: " + result);
+        }
+
+        function sendEmail() {
+            var result = document.getElementById("result").innerText;
+            window.location.href = "mailto:your-email@example.com?subject=Cabinet Door Order&body=" + encodeURIComponent(result);
+        }
+
+        function openEmail() {
+            window.location.href = "mailto:cgddesigncom@gmail.com?subject=Reseller's Permit Attachment";
+        }
+    </script>
+</head>
+<body>
+    <h1>Cabinet Door Order Calculator</h1>
+    <a href="http://www.cgddesign.com">Visit Our Website</a>
+
+    <div class="container">
+        <div class="calculator">
+            <p>Enter Company Name:</p>
+            <input type="text" id="companyName" placeholder="Company Name">
+            <p>Enter Job number:</p>
+            <input type="text" id="jobNumber" placeholder="Job Number">
+            <p>Enter door dimensions:</p>
+            <input type="number" id="length" placeholder="Length (in inches)">
+            <input type="number" id="width" placeholder="Width (in inches)">
+            <p>Select door type:</p>
+            <select id="type">
+                <option value="MDF">MDF</option>
+                <option value="5PieceDoors">5-Piece Doors</option>
+                <option value="MDFPrimed">MDF Primed</option>
+                <option value="5PieceDoorsPrimed">5-Piece Door Primed</option>
+            </select>
+            <button onclick="addDoor()">Add Door</button>
+            <pre id="result"></pre>
+            <button onclick="copyToClipboard()">Copy to Clipboard</button>
+            <button onclick="sendEmail()">Send Email</button>
+            <button onclick="openEmail()">Upload Reseller's Permit</button>
+        </div>
+
+        <div class="instructions">
+            <h2>How to Use This Tool</h2>
+            <p><strong>Welcome to the Cabinet Door Order Calculator!</strong></p>
+            <p>Follow these steps to calculate the cost of your cabinet doors and submit your order:</p>
+            <ol>
+                <li><strong>Enter Your Company Name</strong>: Type your company name in the "Enter Company Name" field.</li>
+                <li><strong>Enter Your Job Number</strong>: Type your Job Number in the "Enter Job number" field.</li>
+                <li><strong>Enter Door Dimensions</strong>: Input the Length and Width for each door in the respective fields.</li>
+                <li><strong>Select Door Type</strong>: Choose the material and style from the "Select door type" dropdown.</li>
+                <li><strong>Add the Door to Your Order</strong>: Click “Add Door” after entering each door's details.</li>
+                <li><strong>Review Your Order</strong>: Check your order summary in the "Doors" section below the form.</li>
+                <li><strong>Copy or Email Your Order</strong>: Use the buttons to copy the order summary or send it via email.</li>
+                <li><strong>Upload Reseller's Permit</strong>: Click “Upload Reseller's Permit” to open an email where you can attach and send your reseller's permit.</li>
+            </ol>
+            <p><strong>Disclaimer:</strong> This is an estimated quote.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Contact us at <a href="tel:2534862908">253-486-2908</a> or email us at <a href="mailto:email@example.com">email@example.com</a></p>
+    </div>
+</body>
+</html>
